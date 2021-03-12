@@ -102,7 +102,6 @@ function Signin({ setModalMessage, setModalVisible }: Props) {
   //! 이것은 카카오 회원가입 할때 필요한 사이드이펙트
   useEffect(() => {
     if (!isKakao) {
-      setIsLoading(true);
       const url = new URL(window.location.href);
       // console.log(url);
       const authorizationCode = url.searchParams.get('code');
@@ -110,7 +109,6 @@ function Signin({ setModalMessage, setModalVisible }: Props) {
         setSelection(false);
         handleKakaoSignup(authorizationCode);
       }
-      setIsKakao(true);
     } else if (userEmail) {
       setSelection(false);
       setInputs({ ...inputs, email: userEmail });
