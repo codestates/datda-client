@@ -6,8 +6,8 @@ import 'dotenv/config';
 import { stringify } from 'querystring';
 
 //! 서버 카카오 로그인 url
-const serverLoginUrl = 'https://datda.link/kakao/login'; //! datda 카카오로그인 주소
-// const serverLoginUrl = 'http://localhost:5000/kakao/login'; //! 로컬서버의 카카오로그인 주소
+// const serverLoginUrl = 'https://datda.link/kakao/login'; //! datda 카카오로그인 주소
+const serverLoginUrl = 'http://localhost:5000/kakao/login'; //! 로컬서버의 카카오로그인 주소
 
 if (localStorage.getItem('loginInfo')) {
   console.log(
@@ -59,16 +59,17 @@ export async function requestKakaoLogin(authorizationCode: string) {
       if (res.status === 201) {
         console.log('회원가입을 해주세요.');
       } else if (res.status === 200) {
+        const accessToken: string = res.data.accessToken;
         localStorage.setItem(
           'loginInfo',
           JSON.stringify({
             isLogin: true,
-            accessToken: res.data.accessToken,
+            accessToken: accessToken,
             permission: res.data.permission,
           }),
         );
+        return requestMainData(accessToken);
       }
-      return requestMainData(res.data.accessToken);
     })
     .catch((error) => {
       console.log(error);
