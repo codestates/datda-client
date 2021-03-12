@@ -11,12 +11,13 @@ export default function StateCardForm({ childInfo }: propsType) {
       <StateCard>
         <Wrapper>
           <Avatar>
-            <AvatarImage src="../images/profile.png"></AvatarImage>
+            {/* <AvatarImage src="../images/profile.png"></AvatarImage> */}
+            <AvatarImage src={childInfo.profileImg}></AvatarImage>
           </Avatar>
           <StateWrapper>
             <NameWrapper>
-              <Institution>{childInfo.institutionId}</Institution>
-              <Class>{childInfo.childClassId}</Class>
+              <Institution>{childInfo.institution.institutionName}</Institution>
+              <Class>{childInfo.classs.className}</Class>
               <Name>{childInfo.childName}</Name>
             </NameWrapper>
             <State

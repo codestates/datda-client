@@ -82,10 +82,13 @@ export default function Main({
     notice: [],
     all: [],
     currentList: [],
+    mainMiniNotice: [],
+    mainMiniIndiNotice: [],
     medicineRequest: [],
     medicineReport: [],
-    IndiNotice: {} as any,
+    indiNotice: {} as any,
   });
+
   // 메인에서 관리하는 list 목록들을 선택적으로 업데이트
   const handleUpdateList = async (title: string) => {
     const childId =
@@ -111,12 +114,39 @@ export default function Main({
       if (result) {
         setList({
           ...list,
-          IndiNotice: result,
+          indiNotice: result,
           currentList: result.teacherRead,
         });
       }
     }
   };
+  const handleInitializeList = async () => {
+    const childId =
+      userInfo.permission === 'parent'
+        ? userInfo.mainData[userInfo.currentChild].childId
+        : null;
+    const notice = await requestNotice(childId);
+    console.log(notice, ' 요청 결과값');
+
+    const indiNotice = await requestIndiNotice();
+    console.log(indiNotice, ' 알림장 결과값');
+
+    if (indiNotice && notice) {
+      setList({
+        ...list,
+        event: notice.ElEvent,
+        notice: notice.ElNotice,
+        all: notice.noticeInfo,
+        currentList: notice.ElNotice,
+        indiNotice: indiNotice,
+        mainMiniNotice: notice.noticeInfo,
+        mainMiniIndiNotice: indiNotice.indiNoticeInfo,
+      });
+    }
+  };
+  useEffect(() => {
+    handleInitializeList();
+  }, []);
   useEffect(() => {
     console.log(list, ' == 리스트 모니터링');
   }, [list]);
@@ -131,7 +161,6 @@ export default function Main({
       });
       return;
     } else if (category === '행사') {
-      console.log('행사가 들어옴??');
       setList({
         ...list,
         currentList: list.event,
@@ -139,17 +168,15 @@ export default function Main({
     }
     //알림장
     if (category === '수신') {
-      console.log('수신인가요??');
       setList({
         ...list,
-        currentList: list.IndiNotice.teacherRead,
+        currentList: list.indiNotice.teacherRead,
       });
     }
     if (category === '발송') {
-      console.log('발송했다');
       setList({
         ...list,
-        currentList: list.IndiNotice.teacherWrite,
+        currentList: list.indiNotice.teacherWrite,
       });
     }
     if (category === '투약의뢰서') {
@@ -204,7 +231,11 @@ export default function Main({
   };
 
   useEffect(() => {
-    console.log(userInfo.currentChild, '현재 아이가 바뀌었어요');
+    // setList({
+    //   ...list,
+    //   mainMiniIndiNotice: userInfo.mainData.indiNotice,
+    //   mainMiniNotice: userInfo.mainData.notice,
+    // });
     if (userInfo.permission === 'parent') {
       handleCheckData(
         userInfo.mainData[userInfo.currentChild].institutionId,
@@ -283,6 +314,7 @@ export default function Main({
                 <Route exact path={`/main`}>
                   <Contents
                     userInfo={userInfo}
+                    list={list}
                     handleChangeChild={handleChangeChild}
                   ></Contents>
                 </Route>
@@ -317,7 +349,7 @@ export default function Main({
                       handleChangeNotice={handleChangeNotice}
                       handleUpdateList={handleUpdateList}
                       userInfo={userInfo}
-                      list={list.currentList}
+                      list={list}
                     />
                   )}
                 />

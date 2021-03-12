@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 interface propsType {
+  handleInsertImageFileInfo: any;
   userInfo: {
     permission: string;
     isLogin: boolean;
@@ -8,7 +9,10 @@ interface propsType {
   };
 }
 
-export default function ImagePostForm({ userInfo }: propsType) {
+export default function ImagePostForm({
+  userInfo,
+  handleInsertImageFileInfo,
+}: propsType) {
   const [image, setImage] = useState({
     file: '',
     previewURL: '',
@@ -25,6 +29,7 @@ export default function ImagePostForm({ userInfo }: propsType) {
         file,
         previewURL: reader.result as string,
       });
+      handleInsertImageFileInfo(reader.result as string);
     };
     //!previewURL에 할당할 데이터 타입이 string 이외일때 예외처리
     if (file !== undefined) {
@@ -68,7 +73,6 @@ export default function ImagePostForm({ userInfo }: propsType) {
 }
 const Image = styled.img`
   width: 100%;
-  height: 100%;
 `;
 const SelectImageInput = styled.input`
   display: none;
@@ -76,6 +80,9 @@ const SelectImageInput = styled.input`
 const ImageContainer = styled.label`
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  background: white;
   cursor: pointer;
 `;
 
@@ -100,6 +107,8 @@ const ImageWrapper = styled.div<any>`
   height: 97%;
   border-radius: 15px 15px 15px 15px;
   background: #e0e0e0;
+  border: 1px solid lightgray;
+
   // 선택한 이미지가 없을경우 기본 이미지 제공
   ${(props) =>
     !props.isSelectedImage &&

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { Link, useRouteMatch, withRouter } from 'react-router-dom';
 import { ImagePostForm, TextAreaForm, WriteMedicineForm } from './Index';
@@ -10,7 +10,9 @@ interface propsType {
   handleInputValue: any;
   fristCategory?: string;
   secondCategory?: string;
+  handleInsertImageFileInfo?: any;
   handleClickRadioButton: any;
+  handleRequestUpload?: any;
   radioButton: string;
   contents?: any;
   userInfo: {
@@ -26,12 +28,14 @@ interface objectType {
 function WriteForm({
   title,
   type,
+  userInfo,
   contents,
   radioButton,
   fristCategory,
   secondCategory,
-  userInfo,
+  handleRequestUpload,
   handleClickRadioButton,
+  handleInsertImageFileInfo,
   handleInputValue,
   inputVlaue,
 }: propsType) {
@@ -43,11 +47,21 @@ function WriteForm({
       <WriteMedicineForm type={type} handleInputValue={handleInputValue} />
     ),
     notice: <TextAreaForm type={type} handleInputValue={handleInputValue} />,
-    meal: <ImagePostForm userInfo={userInfo} />,
+    meal: (
+      <ImagePostForm
+        userInfo={userInfo}
+        handleInsertImageFileInfo={handleInsertImageFileInfo}
+      />
+    ),
     indiNotice: (
       <TextAreaForm type={type} handleInputValue={handleInputValue} />
     ),
-    album: <ImagePostForm userInfo={userInfo} />,
+    album: (
+      <ImagePostForm
+        userInfo={userInfo}
+        handleInsertImageFileInfo={handleInsertImageFileInfo}
+      />
+    ),
   };
   //제목 입력에 대한 핸들러
   const handleTitleValue = (e: any) => {
@@ -57,7 +71,7 @@ function WriteForm({
   //작성 글 등록 요청
   const handleRequestPost = async () => {
     const { title, content, category } = inputVlaue;
-    // console.log('등록요청');
+    console.log(type, 'type이 뭘까?');
     // console.log(type, '현재 타입은??');
     if (type === 'notice') {
       // console.log('공지사항 등록요청 완료');
@@ -65,8 +79,13 @@ function WriteForm({
       // console.log(result, '공지사항 등록요청 완료');
       history.go(PREVIOUS_PAGE);
     }
+    if (type === 'album') {
+      handleRequestUpload();
+    }
   };
-  // console.log(type, ' 현재의 타입은!! ');
+  useEffect(() => {
+    console.log(inputVlaue, '입력값');
+  }, [inputVlaue]);
   return (
     <Wrap>
       {type === 'medicine' ? (

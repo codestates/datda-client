@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { ListForm, WriteForm } from '../components/Index';
+import { ListForm, WriteForm, ReadForm } from '../components/Index';
 interface propsType {
   userInfo: any;
   handleUpdateList: any;
@@ -51,7 +51,7 @@ export default function IndiNotice({
             title="알림장"
             handleUpdateList={handleUpdateList}
             handleChangeNotice={handleChangeNotice}
-            contents={list}
+            contents={list.currentList}
             fristCategory="수신"
             secondCategory="발송"
             permission={userInfo.permission}
@@ -59,7 +59,7 @@ export default function IndiNotice({
         </Route>
         <Route exact path={`${urlMatch.path}/write`}>
           <WriteForm
-            contents={list}
+            contents={list.curretnList}
             radioButton={radioButton}
             handleClickRadioButton={handleClickRadioButton}
             handleInputValue={handleInputValue}
@@ -71,6 +71,16 @@ export default function IndiNotice({
             type="indiNotice"
           ></WriteForm>
         </Route>
+        <Route
+          exact
+          path={`${urlMatch.path}/post/:no`}
+          render={() => (
+            <ReadForm
+              contents={list.indiNotice.indiNoticeInfo}
+              title="알림장"
+            ></ReadForm>
+          )}
+        ></Route>
       </Switch>
     </Wrap>
   );

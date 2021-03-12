@@ -9,25 +9,44 @@ interface propsType {
 export default function ReadForm({ title, contents }: propsType) {
   const { no }: any = useParams();
   const PREVIOUS_PAGE = -1;
-  console.log(no, 'match');
-  console.log(contents, ' 콘텐츠는???');
-  const postView = contents.filter((element: any, index: number) => {
-    if (element.noticeId === Number(no)) {
-      return element;
-    }
-  });
+  console.log(contents, ' 무엇?');
+  let postView = [];
+  if (title === '알림장') {
+    postView = contents.filter((element: any, index: number) => {
+      if (element.indiNoticeId === Number(no)) {
+        return element;
+      }
+    });
+  } else {
+    postView = contents.filter((element: any, index: number) => {
+      if (element.noticeId === Number(no)) {
+        return element;
+      }
+    });
+  }
 
+  console.log(postView, '필터 후');
   return (
     <Wrap>
       <ContentCard>
         <Title>{title}</Title>
-        <Container>
-          <TitleWrapper>
-            <SubTitle>제목 : {postView[0].title}</SubTitle>
-            <Writer>작성자 : {postView[0].writer}</Writer>
-          </TitleWrapper>
-          <TextBox readOnly defaultValue={postView[0].content}></TextBox>
-        </Container>
+        {title === '알림장' ? (
+          <Container>
+            <TitleWrapper>
+              <SubTitle>제목 : {postView[0].content}</SubTitle>
+              <Writer>작성자 : {postView[0].user.writterName}</Writer>
+            </TitleWrapper>
+            <TextBox readOnly defaultValue={postView[0].content}></TextBox>
+          </Container>
+        ) : (
+          <Container>
+            <TitleWrapper>
+              <SubTitle>제목 : {postView[0].title}</SubTitle>
+              <Writer>작성자 : {postView[0].writer}</Writer>
+            </TitleWrapper>
+            <TextBox readOnly defaultValue={postView[0].content}></TextBox>
+          </Container>
+        )}
       </ContentCard>
       <ButtonWrapper>
         <PostButton to="/main/notice">수정</PostButton>

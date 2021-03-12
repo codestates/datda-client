@@ -9,10 +9,15 @@ import {
   MainMenu,
 } from './Index';
 interface propsType {
+  list: any;
   userInfo: any;
   handleChangeChild: (index: number) => void;
 }
-export default function Contents({ userInfo, handleChangeChild }: propsType) {
+export default function Contents({
+  userInfo,
+  handleChangeChild,
+  list,
+}: propsType) {
   //탭 메뉴 상태
   const [clickedMenu, setClickedMenu] = useState(0);
   //탭 메뉴 클릭 이벤트
@@ -61,7 +66,7 @@ export default function Contents({ userInfo, handleChangeChild }: propsType) {
       ) : null}
       <Timetable userInfo={userInfo}></Timetable>
       <MainMenu></MainMenu>
-      <MiniNotice userInfo={userInfo}></MiniNotice>
+      <MiniNotice userInfo={userInfo} list={list.mainMiniNotice}></MiniNotice>
       {(() => {
         if (
           userInfo.permission === 'teacher' ||
@@ -69,7 +74,10 @@ export default function Contents({ userInfo, handleChangeChild }: propsType) {
         ) {
           return (
             <>
-              <MIniIndiNotice userInfo={userInfo}></MIniIndiNotice>
+              <MIniIndiNotice
+                userInfo={userInfo}
+                list={list.mainMiniIndiNotice}
+              ></MIniIndiNotice>
             </>
           );
         }

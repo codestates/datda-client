@@ -15,20 +15,21 @@ interface propsType {
 }
 export default function ListInnerCard(props: propsType) {
   const urlMatch = useRouteMatch();
-  let destination = '';
+  const destination = '';
   // console.log(urlMatch, '현재 위치');
-  if (urlMatch.path === '/main') {
-    destination = '/main/notice';
-    console.log(destination, '도착지 위치');
-  }
+  // if (urlMatch.path === '/main') {
+  //   destination = '/main/notice';
+  //   console.log(destination, '도착지 위치');
+  // }
   // 공지사항 리스트 상태
   const { content, title, category, createdAt } = props;
   // 투약의뢰서 리스트 상태
   const { userId, userName, classId, className } = props;
   let writer = '';
-  if (title === '알림장' && content.user.writterName !== undefined) {
+  if (content.user !== undefined && title === '알림장') {
     writer = content.user.writterName;
   }
+
   if (content.category === 'notice') {
     console.log(content.writer, ' 작성자 ');
     writer = content.writer;
@@ -37,13 +38,13 @@ export default function ListInnerCard(props: propsType) {
     console.log(content.writer, ' 작성자 ');
     writer = content.writer;
   }
-  console.log(title, ' 현재 타이틀');
-  console.log(writer, ' 작성자');
   return (
     <>
       <NoticeCard
         id={content.contentId}
-        to={`${destination || urlMatch.path}/post/${content.noticeId}`}
+        to={`${destination || urlMatch.path}/post/${
+          content.noticeId || content.indiNoticeId
+        }`}
         // to={'/main'}
       >
         <Point>

@@ -1,14 +1,24 @@
 import React from 'react';
 import { Link, useRouteMatch, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
+import { changeTimeStamp } from '../common/utils/changeTimeStamp';
 interface propsType {
-  title: string;
-  imageTitle: string;
-  createdAt: string;
-  userInfo: any;
+  title?: string;
+  imageTitle?: string;
+  content?: any;
+  createdAt?: string;
+  userInfo?: any;
 }
-function CardList({ title, imageTitle, createdAt, userInfo }: propsType) {
+function CardList({
+  content,
+  title,
+  imageTitle,
+  createdAt,
+  userInfo,
+}: propsType) {
   const urlMatch = useRouteMatch();
+  console.log(content, '콘텐트 머임');
+
   return (
     <>
       <Wrap>
@@ -24,149 +34,24 @@ function CardList({ title, imageTitle, createdAt, userInfo }: propsType) {
           </SubMenu>
         )}
         <CardWrapper>
-          <CardContainer>
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>{' '}
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>{' '}
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>{' '}
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>{' '}
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>{' '}
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>{' '}
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>{' '}
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>{' '}
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>{' '}
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>{' '}
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>{' '}
-            <Card>
-              <Image src="../images/nap.png"></Image>
-              <TextContainer>
-                <ImageTitle>{imageTitle}</ImageTitle>
-                <ImageCreatedAt>{createdAt}</ImageCreatedAt>
-              </TextContainer>
-            </Card>
-          </CardContainer>
+          {content ? (
+            <CardContainer>
+              {content.map((element: any, index: number) => {
+                const createAt = changeTimeStamp(element.createdAt);
+                return (
+                  <Card key={element.albumId}>
+                    <Image src={element.photo}></Image>
+                    <TextContainer>
+                      <ImageTitle>{element.title}</ImageTitle>
+                      <ImageCreatedAt>{createAt}</ImageCreatedAt>
+                    </TextContainer>
+                  </Card>
+                );
+              })}
+            </CardContainer>
+          ) : null}
         </CardWrapper>
+
         {(() => {
           console.log(userInfo.permission, 'cardlist권한 확인');
           if (userInfo.permission === 'parent') {
@@ -190,7 +75,9 @@ const Wrap = styled.div`
 
 const Card = styled.div`
   height: 300px;
+  max-width: 200px;
   margin: 1%;
+
   // ${({ theme }) => theme.common.defaultCardDiv}
 `;
 const CardContainer = styled.div`
@@ -245,7 +132,7 @@ const Title = styled.div`
 const Image = styled.img`
   width: 100%;
   height: 65%;
-  border-radius: 0px 0px 15px 15px;
+  border-radius: 15px 15px 15px 15px;
   border-bottom: 1px solid lightgray;
 `;
 const ImageTitle = styled.div`

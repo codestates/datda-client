@@ -7,38 +7,35 @@ import { StringLiteral } from 'typescript';
 import { changeTimeStamp } from '../common/utils/changeTimeStamp';
 interface propsType {
   userInfo: any;
+  list: any;
 }
-export default function MiniNotice({ userInfo }: propsType) {
+export default function MiniNotice({ userInfo, list }: propsType) {
   return (
     <Wrap permission={userInfo.permission}>
       <Title>공지사항</Title>
-      {/* {userInfo.mainData[userInfo.currentChild] ? ( */}
-      <NoticeContainar permission={userInfo.permission}>
-        {userInfo.permission === 'parent'
-          ? userInfo.mainData[userInfo.currentChild].notice.map(
-              (element: any, index: number) => {
+      {list ? (
+        <NoticeContainar permission={userInfo.permission}>
+          {userInfo.permission === 'parent'
+            ? list.map((element: any, index: number) => {
                 return (
                   <ListInnerCard
                     content={element}
-                    key={index}
+                    key={element.noticeId}
                     title={element.title}
                   ></ListInnerCard>
                 );
-              },
-            )
-          : userInfo.mainData.notice.map((element: any, index: number) => {
-              return (
-                <ListInnerCard
-                  content={element}
-                  key={index}
-                  title={element.title}
-                ></ListInnerCard>
-              );
-            })}
-      </NoticeContainar>
-      {/* ) : (
-        <div>데이터가 없습니다</div>
-      )} */}
+              })
+            : list.map((element: any, index: number) => {
+                return (
+                  <ListInnerCard
+                    content={element}
+                    key={element.noticeId}
+                    title={element.title}
+                  ></ListInnerCard>
+                );
+              })}
+        </NoticeContainar>
+      ) : null}
 
       <More to="/main/notice">더보기</More>
     </Wrap>

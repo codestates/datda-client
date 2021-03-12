@@ -4,18 +4,13 @@ import { director, teacher, parents } from '../../assets/testdata';
 axios.defaults.withCredentials = true;
 import 'dotenv/config';
 import { stringify } from 'querystring';
+import { findAllInRenderedTree } from 'react-dom/test-utils';
 
 //! 서버 카카오 로그인 url
 // const serverLoginUrl = 'https://datda.link/kakao/login'; //! datda 카카오로그인 주소
 const serverLoginUrl = 'http://localhost:5000/kakao/login'; //! 로컬서버의 카카오로그인 주소
 
 if (localStorage.getItem('loginInfo')) {
-  console.log(
-    (axios.defaults.headers.common['authorization'] = JSON.parse(
-      localStorage.getItem('loginInfo')!,
-    ).accessToken),
-    '토큰있나',
-  );
   axios.defaults.headers.common['authorization'] = JSON.parse(
     localStorage.getItem('loginInfo')!,
   ).accessToken;
@@ -450,9 +445,9 @@ export const requestIndiNotice = async (childId?: number, content?: string) => {
     })
     .then((res) => {
       if (res.status === 200) {
+        console.log(res.status, res.data);
         return res.data;
       }
-      console.log(res.status, res.data);
     })
     .catch((err) => {
       console.log(err);
@@ -468,4 +463,80 @@ export const IndiNoticeChildrenList = () => {
     .catch((err) => {
       console.log(err);
     });
+};
+// 이미지 등록 요청
+export const requestImageAlbum = async (
+  childId?: number | null,
+  formData?: any | null,
+  title?: string | null,
+  content?: string | null,
+) => {
+  console.log(
+    childId,
+    '어린이 아이디',
+    formData,
+    '파일',
+    title,
+    '제목',
+    content,
+    '내용',
+  );
+  axios.defaults.headers.common['authorization'] = JSON.parse(
+    localStorage.getItem('loginInfo')!,
+  ).accessToken;
+
+  const result = await axios
+    .post('https://datda.link/image/album', {
+      childId: childId || null, // ! optional. 부모의 경우 required(어느 유치원의 사진을 보내줘야 할 지를 알기 위해 사용됩니다.)
+      title: title || null, // ! optional 이긴 하나 사진 업로드 시에는 required
+      content: content || null, // ! optional
+      // ! < 주의 >
+      // ! 하나의 API로 작성하다 보니 title 이 빈칸으로 작성하기 버튼을 클릭하는 상황은 client 에서 막아주셔야 합니다.
+    })
+    .then((res) => {
+      console.log(res.status, '응답 확인 ');
+      if (res.status === 200) {
+        console.log(res.data.albumInfo, '앨범 ㅋㅋ');
+        // ! (1) 사진을 등록한 경우 아래의 조건으로 빠집니다.
+        if (childId !== undefined && title !== undefined) {
+          console.log('사진등록 axios');
+
+          axios({
+            method: 'post',
+            url: 'https://datda.link/image/albumpost',
+            data: formData,
+            headers: { 'Content-Type': 'form-data' },
+          })
+            // axios
+            //   .post(
+            //     'https://datda.link/image/albumpost',
+            //     {
+            //       // ! asdfasdf payload에 대한 고찰
+            //       formData: formData,
+            //     },
+            //     {
+            //       headers: { 'Content-Type': 'multipart/form-data' },
+            //     },
+            //   )
+            .then((res) => {
+              alert('앨범이 등록 되었습니다.');
+
+              console.log(123, res.data); // ! => 이 res.data 를 활용하시길 바랍니다!
+
+              return res.data;
+            });
+          console.log(res.data); // ! => 이 res.data 를 활용하는 것이 아닙니다!
+        } else {
+          // ! (2) 사진을 등록하지 않은 경우 아래의 조건으로 빠집니다.
+          console.log(res.data);
+        }
+        return res.data.albumInfo;
+      } else {
+        return res.data.albumInfo;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  return result;
 };

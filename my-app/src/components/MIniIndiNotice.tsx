@@ -6,39 +6,37 @@ import { notice } from '../assets/testdata';
 import { changeTimeStamp } from '../common/utils/changeTimeStamp';
 interface propsType {
   userInfo: any;
+  list: any;
 }
-export default function MiniIndiNotice({ userInfo }: propsType) {
+export default function MiniIndiNotice({ userInfo, list }: propsType) {
   return (
     <Wrap>
       <Title>알림장</Title>
-      {/* {userInfo.mainData[userInfo.currentChild] ? ( */}
-      <NoticeContainar>
-        {userInfo.permission === 'parent'
-          ? userInfo.mainData[userInfo.currentChild].indiNotice.map(
-              (element: any, index: number) => {
+      {list ? (
+        <NoticeContainar>
+          {userInfo.permission === 'parent'
+            ? list.map((element: any, index: number) => {
                 return (
                   <ListInnerCard
                     content={element}
-                    key={element.noticeId}
-                    title={element.contents}
+                    key={element.indiNoticeId}
+                    title={'알림장'}
                   ></ListInnerCard>
                 );
-              },
-            )
-          : userInfo.mainData.indiNotice.map((element: any, index: number) => {
-              return (
-                <ListInnerCard
-                  content={element}
-                  key={element.noticeId}
-                  title={element.contents}
-                ></ListInnerCard>
-              );
-            })}
-      </NoticeContainar>
-      {/* ) : ( */}
-      {/* <div>데이터가 없습니다</div> */}
-      {/* )} */}
-
+              })
+            : list.map((element: any, index: number) => {
+                return (
+                  <ListInnerCard
+                    content={element}
+                    key={element.indiNoticeId}
+                    title={'알림장'}
+                  ></ListInnerCard>
+                );
+              })}
+        </NoticeContainar>
+      ) : (
+        <div>데이터가 없습니다</div>
+      )}
       <More to="/main/indi_notice">더보기</More>
     </Wrap>
   );
